@@ -6,8 +6,8 @@ import "../interfaces/IReferenda.sol";
 /// @title Referendum DAO
 /// @notice DAO that submits and manages referendums
 contract ReferendumDAO {
-    IReferenda public immutable referenda;
-    
+    IReferenda public immutable referenda = IReferenda(REFERENDA_PRECOMPILE_ADDRESS);
+
     struct Proposal {
         bytes32 proposalHash;
         uint32 referendumIndex;
@@ -15,17 +15,13 @@ contract ReferendumDAO {
         bool submitted;
         bool depositPlaced;
     }
-    
+
     uint256 public proposalCount;
     mapping(uint256 => Proposal) public proposals;
-    
+
     event ProposalCreated(uint256 indexed proposalId, address indexed proposer);
     event ProposalSubmitted(uint256 indexed proposalId, uint32 indexed referendumIndex);
     event DepositPlacedByDAO(uint256 indexed proposalId, uint32 indexed referendumIndex);
-    
-    constructor(address _referenda) {
-        referenda = IReferenda(_referenda);
-    }
     
     /// @notice Create a proposal (stored locally before submission)
     function createProposal(bytes32 proposalHash) 

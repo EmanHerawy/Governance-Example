@@ -6,8 +6,8 @@ import "../interfaces/IConvictionVoting.sol";
 /// @title Tally Analyzer
 /// @notice Analyze referendum voting tallies
 contract TallyAnalyzer {
-    IConvictionVoting public immutable convictionVoting;
-    
+    IConvictionVoting public immutable convictionVoting = IConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
     struct TallyAnalysis {
         bool exists;
         uint128 ayes;
@@ -17,10 +17,6 @@ contract TallyAnalyzer {
         uint256 approvalPercentage;
         uint256 participationScore;
         string outcome;
-    }
-    
-    constructor(address _convictionVoting) {
-        convictionVoting = IConvictionVoting(_convictionVoting);
     }
     
     /// @notice Get detailed tally analysis

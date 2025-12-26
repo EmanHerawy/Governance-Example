@@ -6,8 +6,8 @@ import "../interfaces/IConvictionVoting.sol";
 /// @title Delegation Manager
 /// @notice Advanced delegation management
 contract DelegationManager {
-    IConvictionVoting public immutable convictionVoting;
-    
+    IConvictionVoting public immutable convictionVoting = IConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
     struct DelegationInfo {
         bool isDelegating;
         address target;
@@ -15,13 +15,9 @@ contract DelegationManager {
         string convictionString;
         uint128 effectiveVotingPower;
     }
-    
+
     event DelegationChanged(address indexed delegator, uint16 indexed trackId, address indexed newTarget);
     event MultipleDelegationsSet(address indexed delegator, uint256 trackCount);
-    
-    constructor(address _convictionVoting) {
-        convictionVoting = IConvictionVoting(_convictionVoting);
-    }
     
     /// @notice Get delegation info with calculated voting power
     function getDelegationInfo(address delegator, uint16 trackId) 
