@@ -16,7 +16,7 @@ enum Status {
  */
 contract CrowdSourcer {
     Status public status;
-    IReferenda public immutable referenda;
+    IReferenda public immutable referenda = IReferenda(REFERENDA_PRECOMPILE_ADDRESS);
     uint32 public immutable referendumIndex;
     uint128 public immutable targetDecisionDeposit;
     uint128 public totalContributed;
@@ -25,7 +25,6 @@ contract CrowdSourcer {
 
     constructor(uint32 _referendumIndex) {
         referendumIndex = _referendumIndex;
-        referenda = IReferenda(REFERENDA_PRECOMPILE_ADDRESS);
         targetDecisionDeposit = referenda.decisionDeposit(_referendumIndex);
         status = Status.Depositing;
     }
