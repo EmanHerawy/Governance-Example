@@ -7,33 +7,28 @@ import "../interfaces/IConvictionVoting.sol";
 /// @title Delegation Pool
 /// @notice Pool voting power and delegate to expert voters
 contract DelegationPool {
-    IReferenda public immutable referenda;
-    IConvictionVoting public immutable convictionVoting;
-    
+    IReferenda public immutable referenda = IReferenda(REFERENDA_PRECOMPILE_ADDRESS);
+    IConvictionVoting public immutable convictionVoting = IConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
     struct Member {
         uint128 balance;
         bool isActive;
     }
-    
+
     struct Expert {
         uint128 totalDelegated;
         uint16 trackId;
         bool isActive;
     }
-    
+
     mapping(address => Member) public members;
     mapping(address => Expert) public experts;
-    
+
     uint128 public totalPooled;
-    
+
     event MemberJoined(address indexed member, uint128 amount);
     event MemberLeft(address indexed member, uint128 amount);
     event DelegatedToExpert(address indexed expert, uint16 trackId, uint128 amount);
-    
-    constructor(address _referenda, address _convictionVoting) {
-        referenda = IReferenda(_referenda);
-        convictionVoting = IConvictionVoting(_convictionVoting);
-    }
     
     /// @notice Join the pool with tokens
     function joinPool(uint128 amount) external {

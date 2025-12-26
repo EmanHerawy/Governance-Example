@@ -6,18 +6,14 @@ import "../interfaces/IConvictionVoting.sol";
 /// @title Conviction Calculator
 /// @notice Calculate voting power and lock periods
 contract ConvictionCalculator {
-    IConvictionVoting public immutable convictionVoting;
-    
+    IConvictionVoting public immutable convictionVoting = IConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
     struct ConvictionDetails {
         IConvictionVoting.Conviction level;
         string name;
         uint256 multiplier;
         uint256 lockPeriods;
         uint128 votingPower;
-    }
-    
-    constructor(address _convictionVoting) {
-        convictionVoting = IConvictionVoting(_convictionVoting);
     }
     
     /// @notice Calculate voting power for a given balance and conviction

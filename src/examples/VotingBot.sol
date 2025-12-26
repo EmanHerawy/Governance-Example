@@ -7,40 +7,36 @@ import "../interfaces/IConvictionVoting.sol";
 /// @title Automated Voting Bot
 /// @notice Automatically votes on referendums based on predefined strategies
 contract VotingBot {
-    IReferenda public immutable referenda;
-    IConvictionVoting public immutable convictionVoting;
-    
+    IReferenda public immutable referenda = IReferenda(REFERENDA_PRECOMPILE_ADDRESS);
+    IConvictionVoting public immutable convictionVoting = IConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
     address public owner;
     uint16 public trackId;
-    
+
     enum VoteStrategy {
         AlwaysAye,
         AlwaysNay,
         FollowDelegate,
         BasedOnTally
     }
-    
+
     VoteStrategy public strategy;
     address public delegateToFollow;
     IConvictionVoting.Conviction public defaultConviction;
     uint128 public voteAmount;
-    
+
     event AutoVoted(uint32 indexed referendumIndex, bool aye, uint128 amount);
-    
+
     modifier onlyOwner() {
         require(msg.sender == owner, "Not owner");
         _;
     }
-    
+
     constructor(
-        address _referenda,
-        address _convictionVoting,
         uint16 _trackId,
         VoteStrategy _strategy,
         uint128 _voteAmount
     ) {
-        referenda = IReferenda(_referenda);
-        convictionVoting = IConvictionVoting(_convictionVoting);
         owner = msg.sender;
         trackId = _trackId;
         strategy = _strategy;

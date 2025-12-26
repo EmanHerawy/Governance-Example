@@ -13,14 +13,18 @@ contract ExamplesTest is Test {
     ReferendumViewer public viewer;
     ReferendumManager public manager;
     ReferendumDAO public dao;
-    
+
     address public alice = address(0x1);
-    
+
     function setUp() public {
-        referenda = new MockReferenda();
-        viewer = new ReferendumViewer(address(referenda));
-        manager = new ReferendumManager(address(referenda));
-        dao = new ReferendumDAO(address(referenda));
+        // Deploy mock and copy its code to the precompile address
+        MockReferenda mockImpl = new MockReferenda();
+        vm.etch(REFERENDA_PRECOMPILE_ADDRESS, address(mockImpl).code);
+        referenda = MockReferenda(REFERENDA_PRECOMPILE_ADDRESS);
+
+        viewer = new ReferendumViewer();
+        manager = new ReferendumManager();
+        dao = new ReferendumDAO();
     }
     
     function test_Viewer_GetStatusString() public {

@@ -6,11 +6,7 @@ import "../interfaces/IReferenda.sol";
 /// @title Referendum Viewer
 /// @notice Helper contract for reading and displaying referendum information
 contract ReferendumViewer {
-    IReferenda public immutable referenda;
-    
-    constructor(address _referenda) {
-        referenda = IReferenda(_referenda);
-    }
+    IReferenda public immutable referenda = IReferenda(REFERENDA_PRECOMPILE_ADDRESS);
     
     /// @notice Get human-readable status string
     function getStatusString(uint32 refIndex) 

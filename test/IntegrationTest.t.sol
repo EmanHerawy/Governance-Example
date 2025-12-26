@@ -18,27 +18,32 @@ contract IntegrationTest is Test {
     VotingBot public votingBot;
     DelegationPool public delegationPool;
     GovernanceAnalytics public analytics;
-    
+
     address public alice = address(0x1);
     address public bob = address(0x2);
     address public charlie = address(0x3);
-    
+
     uint16 public constant TRACK_ID = 0;
-    
+
     function setUp() public {
-        referenda = new MockReferenda();
-        convictionVoting = new MockConvictionVoting();
-        dashboard = new GovernanceDashboard(address(referenda), address(convictionVoting));
+        // Deploy mocks and copy their code to the precompile addresses
+        MockReferenda referendaMockImpl = new MockReferenda();
+        vm.etch(REFERENDA_PRECOMPILE_ADDRESS, address(referendaMockImpl).code);
+        referenda = MockReferenda(REFERENDA_PRECOMPILE_ADDRESS);
+
+        MockConvictionVoting convictionMockImpl = new MockConvictionVoting();
+        vm.etch(CONVICTION_VOTING_PRECOMPILE_ADDRESS, address(convictionMockImpl).code);
+        convictionVoting = MockConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
+        dashboard = new GovernanceDashboard();
         votingBot = new VotingBot(
-            address(referenda),
-            address(convictionVoting),
             TRACK_ID,
             VotingBot.VoteStrategy.AlwaysAye,
             100 ether
         );
-        delegationPool = new DelegationPool(address(referenda), address(convictionVoting));
-        analytics = new GovernanceAnalytics(address(referenda), address(convictionVoting));
-        
+        delegationPool = new DelegationPool();
+        analytics = new GovernanceAnalytics();
+
         vm.label(alice, "Alice");
         vm.label(bob, "Bob");
         vm.label(charlie, "Charlie");

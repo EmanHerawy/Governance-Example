@@ -6,16 +6,12 @@ import "../interfaces/IReferenda.sol";
 /// @title Referendum Manager
 /// @notice  Managing multiple referendums
 contract ReferendumManager {
-    IReferenda public immutable referenda;
-    
+    IReferenda public immutable referenda = IReferenda(REFERENDA_PRECOMPILE_ADDRESS);
+
     event BatchDepositPlaced(uint32[] indices, uint256 successCount);
     event DepositRefunded(uint32 indexed refIndex, uint128 amount);
-    
+
     error DepositFailed(uint32 refIndex, string reason);
-    
-    constructor(address _referenda) {
-        referenda = IReferenda(_referenda);
-    }
     
     /// @notice Place decision deposits for multiple referendums
     /// @dev Continues on failure, returns success count

@@ -7,9 +7,9 @@ import "../interfaces/IConvictionVoting.sol";
 /// @title Governance Analytics
 /// @notice Advanced analytics combining referenda and voting data
 contract GovernanceAnalytics {
-    IReferenda public immutable referenda;
-    IConvictionVoting public immutable convictionVoting;
-    
+    IReferenda public immutable referenda = IReferenda(REFERENDA_PRECOMPILE_ADDRESS);
+    IConvictionVoting public immutable convictionVoting = IConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
     struct TrackAnalytics {
         uint256 totalReferendums;
         uint256 ongoingCount;
@@ -17,11 +17,6 @@ contract GovernanceAnalytics {
         uint256 rejectedCount;
         uint128 totalVotesCast;
         uint128 avgParticipation;
-    }
-    
-    constructor(address _referenda, address _convictionVoting) {
-        referenda = IReferenda(_referenda);
-        convictionVoting = IConvictionVoting(_convictionVoting);
     }
     
     /// @notice Get track analytics

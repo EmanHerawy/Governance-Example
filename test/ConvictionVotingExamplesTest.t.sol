@@ -15,21 +15,25 @@ contract ConvictionVotingExamplesTest is Test {
     DelegationManager public delegationManager;
     TallyAnalyzer public tallyAnalyzer;
     ConvictionCalculator public calculator;
-    
+
     address public alice = address(0x1);
     address public bob = address(0x2);
     address public charlie = address(0x3);
-    
+
     uint16 public constant TRACK_ID = 0;
     uint32 public constant REF_INDEX = 1;
-    
+
     function setUp() public {
-        convictionVoting = new MockConvictionVoting();
-        voteManager = new VoteManager(address(convictionVoting));
-        delegationManager = new DelegationManager(address(convictionVoting));
-        tallyAnalyzer = new TallyAnalyzer(address(convictionVoting));
-        calculator = new ConvictionCalculator(address(convictionVoting));
-        
+        // Deploy mock and copy its code to the precompile address
+        MockConvictionVoting mockImpl = new MockConvictionVoting();
+        vm.etch(CONVICTION_VOTING_PRECOMPILE_ADDRESS, address(mockImpl).code);
+        convictionVoting = MockConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
+        voteManager = new VoteManager();
+        delegationManager = new DelegationManager();
+        tallyAnalyzer = new TallyAnalyzer();
+        calculator = new ConvictionCalculator();
+
         vm.label(alice, "Alice");
         vm.label(bob, "Bob");
         vm.label(charlie, "Charlie");
