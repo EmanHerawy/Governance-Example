@@ -6,18 +6,14 @@ import "../interfaces/IConvictionVoting.sol";
 /// @title Vote Manager
 /// @notice Helper contract for managing conviction votes
 contract VoteManager {
-    IConvictionVoting public immutable convictionVoting;
-    
+    IConvictionVoting public immutable convictionVoting = IConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
     struct VoteInfo {
         bool exists;
         string voteTypeString;
         string convictionString;
         uint128 totalAmount;
         bool isAye;
-    }
-    
-    constructor(address _convictionVoting) {
-        convictionVoting = IConvictionVoting(_convictionVoting);
     }
     
     /// @notice Get human-readable vote information

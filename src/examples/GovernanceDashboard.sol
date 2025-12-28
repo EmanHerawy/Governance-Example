@@ -7,9 +7,9 @@ import "../interfaces/IConvictionVoting.sol";
 /// @title Governance Dashboard
 /// @notice Comprehensive view of governance state combining referenda and voting data
 contract GovernanceDashboard {
-    IReferenda public immutable referenda;
-    IConvictionVoting public immutable convictionVoting;
-    
+    IReferenda public immutable referenda = IReferenda(REFERENDA_PRECOMPILE_ADDRESS);
+    IConvictionVoting public immutable convictionVoting = IConvictionVoting(CONVICTION_VOTING_PRECOMPILE_ADDRESS);
+
     struct ReferendumWithVoting {
         IReferenda.ReferendumInfo info;
         bool userHasVoted;
@@ -20,11 +20,6 @@ contract GovernanceDashboard {
         uint128 tallyNays;
         uint128 tallySupport;
         bool isPassing;
-    }
-    
-    constructor(address _referenda, address _convictionVoting) {
-        referenda = IReferenda(_referenda);
-        convictionVoting = IConvictionVoting(_convictionVoting);
     }
     
     /// @notice Get complete referendum dashboard for a user
